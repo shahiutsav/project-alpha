@@ -2,44 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class EnemyMovement : MonoBehaviour
 {
-    private float speed = 3;
-    private float turnSpeed = 35;
-
-    // Object for projectile
-
-    // Input from players
-    private float forwardInput;
-    private float horizontalInput;
+    private float verticalMovement;
+    private float randomRotation;
+    private float speed = 5;
 
     private float xRange = 34f;
     private float zRange = 16.6f;
 
+    private float turnSpeed = 35;
+
     // Start is called before the first frame update
     void Start()
     {
-
+        StartCoroutine(DirectionInterval());
     }
 
     // Update is called once per frame
     void Update()
     {
-        KeyboardControls();
-    }
-
-    void KeyboardControls()
-    {
-        forwardInput = Input.GetAxis("Vertical");
-        horizontalInput = Input.GetAxis("Horizontal");
-        transform.Translate(Vector3.forward * Time.deltaTime * forwardInput * -speed);
-
-        if (forwardInput < 0 || forwardInput > 0 )
-        {
-            transform.Rotate(Vector3.up * Time.deltaTime * horizontalInput * turnSpeed);
-        }
-
-
+        MovementControl();
 
         // Player Movement Limit
         if (transform.position.x < -xRange)
@@ -59,4 +42,29 @@ public class PlayerMovement : MonoBehaviour
             transform.position = new Vector3(transform.position.x, transform.position.y, zRange);
         }
     }
+
+    IEnumerator DirectionInterval()
+    {
+        while (true)
+        {
+            verticalMovement = Random.Range(-1, 2);
+            randomRotation = Random.Range(-1, 2);
+            yield return new WaitForSeconds(1);
+        }
+    }
+
+    void MovementControl()
+    {
+        
+        Debug.Log(randomRotation);
+        transform.Translate(Vector3.forward * Time.deltaTime * verticalMovement * speed);
+
+        if (verticalMovement < 0 || verticalMovement > 0)
+        {
+            transform.Rotate(Vector3.up * Time.deltaTime * randomRotation * turnSpeed);
+        }
+    }
+
+    
+
 }
